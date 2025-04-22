@@ -1,0 +1,111 @@
+Here’s a simple way to build a **“Calculator” custom app** entirely in the Salesforce Developer Console, using a Visualforce‑Apex approach. You’ll end up with a standalone Lightning App in which users can enter two numbers and click Add/Subtract/Multiply/Divide.
+
+---
+
+## 1. Create the Apex Controller
+
+1. In Dev Console: **File → New → Apex Class**  
+2. Name it `CustomCalculatorController` and paste:
+
+    ```java
+    public with sharing class CustomCalculatorController {
+        // bound to VF inputs
+        public Decimal num1 { get; set; }
+        public Decimal num2 { get; set; }
+        public Decimal result { get; set; }
+
+        public PageReference add() {
+            result = num1 + num2;
+            return null;
+        }
+        public PageReference subtract() {
+            result = num1 - num2;
+            return null;
+        }
+        public PageReference multiply() {
+            result = num1 * num2;
+            return null;
+        }
+        public PageReference divide() {
+            if (num2 == 0) {
+                ApexPages.addMessage(new ApexPages.Message(
+                    ApexPages.Severity.ERROR,
+                    'Cannot divide by zero'
+                ));
+            } else {
+                result = num1 / num2;
+            }
+            return null;
+        }
+    }
+    ```
+
+3. **Save**.
+
+---
+
+## 2. Build the Visualforce Page
+
+1. In Dev Console: **File → New → Visualforce Page**  
+2. Name it `CustomCalculator` and paste:
+
+    ```html
+    <apex:page controller="CustomCalculatorController" sidebar="false" showHeader="true">
+      <apex:form >
+        <apex:pageBlock title="Custom Calculator">
+          <apex:pageBlockSection columns="2">
+            <apex:inputText    label="Number 1" value="{!num1}" />
+            <apex:inputText    label="Number 2" value="{!num2}" />
+          </apex:pageBlockSection>
+          <apex:pageBlockButtons >
+            <apex:commandButton action="{!add}"      value="Add"       rerender="pb"/>
+            <apex:commandButton action="{!subtract}" value="Subtract"  rerender="pb"/>
+            <apex:commandButton action="{!multiply}" value="Multiply"  rerender="pb"/>
+            <apex:commandButton action="{!divide}"   value="Divide"    rerender="pb"/>
+          </apex:pageBlockButtons>
+          <apex:pageBlockSection id="pb">
+            <apex:messages />
+            <apex:outputText value="Result: {!IF(ISNULL(result), '--', TEXT(result))}" />
+          </apex:pageBlockSection>
+        </apex:pageBlock>
+      </apex:form>
+    </apex:page>
+    ```
+
+3. **Save**.
+
+---
+
+## 3. Expose It via a Tab
+
+1. In **Setup** → **Platform Tools** → **User Interface** → **Tabs** → **Visualforce Tabs** → **New**  
+2. Select the **CustomCalculator** page, label it “Calculator”, choose an icon, and save.
+
+---
+
+## 4. Create Your Lightning App
+
+1. In **Setup** → **App Manager** → **New Lightning App**  
+2.  
+   - **App Name:** Calculator App  
+   - **Description:** A simple two‑number calculator  
+   - **User Profile:** Select who can see it  
+3. **Navigation Items:**  
+   - Add your new **Calculator** tab  
+4. **Save & Finish**.
+
+---
+
+## 5. Run It
+
+- Go to the **App Launcher** (◻️ grid icon), launch **Calculator App**, click the **Calculator** tab, enter numbers, and click your operation button.  
+
+---
+
+### What’s Next?
+
+- **Lightning Web Component (LWC) version** with client‑side JS math (no server trips).  
+- **Styling tweaks** (SLDS, custom CSS).  
+- **Extended features**: percent, memory, history log.  
+
+Let me know if you’d like to see a Lightning‑component‑based calculator, or any of those enhancements!
