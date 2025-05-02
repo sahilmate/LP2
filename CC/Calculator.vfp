@@ -1,0 +1,129 @@
+<apex:page controller="Calculator" showHeader="false" sidebar="false">
+<apex:form styleClass="calc-container">
+<style>
+.calc-container {
+max-width: 400px;
+margin: 40px auto;
+background: #1e1e1e;
+border-radius: 20px;
+padding: 20px;
+font-family: 'Segoe UI', sans-serif;
+color: white;
+box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+}
+.display {
+text-align: right;
+font-size: 2em;
+margin-bottom: 10px;
+padding: 15px;
+background: #f1f1f1;
+color: #2c3e50;
+border-radius: 12px;
+}
+.row {
+display: flex;
+justify-content: space-between;
+margin: 6px 0;
+}
+.btn {
+flex: 1;
+margin: 4px;
+padding: 15px 0;
+font-size: 1.2em;
+border: none;
+border-radius: 6px;
+background: #eee;
+color: #333;
+cursor: pointer;
+box-shadow: inset 0 -2px 0 rgba(0,0,0,0.2);
+}
+.btn.operator {
+background: #333;
+color: white;
+}
+.btn.equal {
+background: #2980b9;
+color: white;
+}
+.btn.clear {
+background: #c0392b;
+color: white;
+}
+.btn:hover {
+opacity: 0.9;
+}
+</style>
+
+<apex:outputPanel id="displayPanel">
+    <div class="display">
+        = {!display}
+    </div>
+</apex:outputPanel>
+
+<!-- Operator Row -->
+<div class="row">
+    <apex:commandButton value="+" action="{!setOperator}" rerender="displayPanel" styleClass="btn operator">
+        <apex:param name="operator" value="+" />
+    </apex:commandButton>
+    <apex:commandButton value="-" action="{!setOperator}" rerender="displayPanel" styleClass="btn operator">
+        <apex:param name="operator" value="-" />
+    </apex:commandButton>
+    <apex:commandButton value="×" action="{!setOperator}" rerender="displayPanel" styleClass="btn operator">
+        <apex:param name="operator" value="*" />
+    </apex:commandButton>
+    <apex:commandButton value="÷" action="{!setOperator}" rerender="displayPanel" styleClass="btn operator">
+        <apex:param name="operator" value="/" />
+    </apex:commandButton>
+</div>
+
+<!-- Number Buttons -->
+<div class="row">
+    <apex:commandButton value="7" action="{!pressDigit}" rerender="displayPanel" styleClass="btn">
+        <apex:param name="digit" value="7" />
+    </apex:commandButton>
+    <apex:commandButton value="8" action="{!pressDigit}" rerender="displayPanel" styleClass="btn">
+        <apex:param name="digit" value="8" />
+    </apex:commandButton>
+    <apex:commandButton value="9" action="{!pressDigit}" rerender="displayPanel" styleClass="btn">
+        <apex:param name="digit" value="9" />
+    </apex:commandButton>
+</div>
+
+<div class="row">
+    <apex:commandButton value="4" action="{!pressDigit}" rerender="displayPanel" styleClass="btn">
+        <apex:param name="digit" value="4" />
+    </apex:commandButton>
+    <apex:commandButton value="5" action="{!pressDigit}" rerender="displayPanel" styleClass="btn">
+        <apex:param name="digit" value="5" />
+    </apex:commandButton>
+    <apex:commandButton value="6" action="{!pressDigit}" rerender="displayPanel" styleClass="btn">
+        <apex:param name="digit" value="6" />
+    </apex:commandButton>
+</div>
+
+<div class="row">
+    <apex:commandButton value="3" action="{!pressDigit}" rerender="displayPanel" styleClass="btn">
+        <apex:param name="digit" value="3" />
+    </apex:commandButton>
+    <apex:commandButton value="2" action="{!pressDigit}" rerender="displayPanel" styleClass="btn">
+        <apex:param name="digit" value="2" />
+    </apex:commandButton>
+    <apex:commandButton value="1" action="{!pressDigit}" rerender="displayPanel" styleClass="btn">
+        <apex:param name="digit" value="1" />
+    </apex:commandButton>
+</div>
+
+<div class="row">
+    <apex:commandButton value="0" action="{!pressDigit}" rerender="displayPanel" styleClass="btn">
+        <apex:param name="digit" value="0" />
+    </apex:commandButton>
+    <apex:commandButton value="." action="{!addDecimal}" rerender="displayPanel" styleClass="btn" />
+    <apex:commandButton value="C" action="{!clear}" rerender="displayPanel" styleClass="btn clear" />
+</div>
+
+<div class="row">
+    <apex:commandButton value="=" action="{!calculate}" rerender="displayPanel" styleClass="btn equal" />
+</div>
+
+</apex:form>
+</apex:page>
