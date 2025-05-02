@@ -1,0 +1,81 @@
+public class Calculator {
+    public String display { get; set; }
+    private String currentInput = '';
+    private String operator = '';
+    private Decimal firstOperand;
+    private Boolean operatorSet = false;
+
+    public Calculator() {
+        display = '0';
+    }
+
+    public PageReference pressDigit() {
+        String digit = ApexPages.currentPage().getParameters().get('digit');
+        if (digit != null && !(digit == '0' && currentInput == '0')) {
+            currentInput += digit;
+            display = currentInput;
+        }
+        return null;
+    }
+
+    public PageReference setOperator() {
+        String op = ApexPages.currentPage().getParameters().get('operator');
+        if (currentInput != '') {
+            try {
+                firstOperand = Decimal.valueOf(currentInput);
+            } catch (Exception e) {
+                display = 'Error';
+                return null;
+            }
+            operator = op;
+            operatorSet = true;
+            currentInput = '';
+            display = operator;
+        }
+        return null;
+    }
+
+    public PageReference calculate() {
+        if (operatorSet && currentInput != '') {
+            try {
+                Decimal secondOperand = Decimal.valueOf(currentInput);
+                Decimal result;
+                if (operator == '+') result = firstOperand + secondOperand;
+                else if (operator == '-') result = firstOperand - secondOperand;
+                else if (operator == '*') result = firstOperand * secondOperand;
+                else if (operator == '/') {
+                    if (secondOperand == 0) {
+                        display = 'Error';
+                        return null;
+                    } else {
+                        result = firstOperand / secondOperand;
+                    }
+                }
+                else result = 0;
+                display = String.valueOf(result);
+                currentInput = display;
+                operatorSet = false;
+            } catch (Exception e) {
+                display = 'Error';
+            }
+        }
+        return null;
+    }
+
+    public PageReference addDecimal() {
+        if (!currentInput.contains('.')) {
+            currentInput += (currentInput == '') ? '0.' : '.';
+            display = currentInput;
+        }
+        return null;
+    }
+
+    public PageReference clear() {
+        currentInput = '';
+        operator = '';
+        firstOperand = 0;
+        operatorSet = false;
+        display = '0';
+        return null;
+    }
+}
